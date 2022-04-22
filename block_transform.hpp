@@ -12,11 +12,15 @@
 #define DEBUG true
 
 template <size_t size>
-std::bitset<size>   p_block(std::bitset<size> begin_state, std::array<size_t, size> rule)
+std::bitset<size>   p_block(const std::bitset<size>& begin_state, const std::array<size_t, size>& rule)
 {
     std::bitset<size>   end_state;
-    for (int i = 0; i < size; ++i)
-        end_state[rule[i]] = begin_state[i];
+    std::cout << begin_state << std::endl;
+    std::cout << std::endl;
+    for (int i = size - 1; i >= 0; --i)
+    {
+        end_state[i] = begin_state[size - 1 - rule[size - i - 1]];
+    }
     return (end_state);
 }
 
@@ -83,7 +87,7 @@ bool    test_p_block(std::bitset<size> begin_state,
 template <size_t size>
 struct bitset_less
 {
-    bool    operator()(const std::bitset<size> left, const std::bitset<size> right) const
+    bool    operator()(const std::bitset<size>& left, const std::bitset<size>& right) const
     {
         return (left.to_ullong() < right.to_ullong());
     }
@@ -95,7 +99,7 @@ using  rule_map = std::map<std::bitset<begin_size>, std::bitset<end_size>,
 
 template <size_t size, size_t s_begin_size, size_t s_end_size>
 std::bitset<size / s_begin_size * s_end_size>
-    s_block(std::bitset<size> begin_state, rule_map<s_begin_size, s_end_size> rule)
+    s_block(const std::bitset<size>& begin_state, rule_map<s_begin_size, s_end_size>& rule)
 {
     if (size % s_begin_size != 0)
     {
